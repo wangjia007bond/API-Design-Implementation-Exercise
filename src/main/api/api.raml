@@ -1,0 +1,82 @@
+#%RAML 1.0
+title: e-shop API
+version: v1
+baseUri: http://localhost:8081/api/{version}
+
+types:
+  Customer:
+    properties:
+      id: integer
+      firstname: string
+      lastname: string
+      address?: string
+  Error:
+    properties:
+      code: integer
+      message: string
+
+/customers:
+  displayName: Customers
+  get:
+    description: List all Customers matching query criteria, if provided; otherwise list all Customers
+    queryParameters:
+      first name?: string
+      last name?: string
+    responses:
+      200:
+        body:
+          application/json:
+            type: Customer[]
+            example: !include examples/Customers.json
+  post:
+    description: Create a new Customer
+    body:
+      application/json:
+        type: Customer
+        example: !include examples/Customer.json
+    responses:
+      201:
+        body:
+          application/json:
+            type: Customer
+            example: !include examples/Customer.json
+  /{id}:
+    get:
+      description: Get a Customer by id
+      responses:
+        200:
+          body:
+            application/json:
+              type: Customer
+              example: !include examples/Customer.json
+        404:
+          body:
+            application/json:
+              type: Error
+              example: !include examples/Error.json
+    put:
+      description: Update a new Customer
+      body:
+        application/json:
+          type: Customer
+          example: !include examples/Customer.json
+      responses:
+        200:
+          body:
+            application/json:
+              type: Customer
+              example: !include examples/Customer.json
+        404:
+          body:
+            application/json:
+              type: Error
+              example: !include examples/Error.json
+    delete:
+      description: Delete a Customer by id
+      responses:
+        204:
+        404:
+          body:
+            application/json:
+              type: Error
+              example: !include examples/Error.json
