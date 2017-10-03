@@ -1,2 +1,2 @@
-INSERT INTO customer(firstname, lastname, address) VALUES('Bill', 'Gates', 'Microsoft');
-INSERT INTO customer(firstname, lastname, address) VALUES('Steve', 'Jobs', 'Apple');
+INSERT INTO customer(firstname, lastname, address, createdTime, updatedtime) VALUES('Bill', 'Gates', 'Microsoft', now(), now());
+INSERT INTO customer(firstname, lastname, address, createdTime, updatedtime) VALUES('Steve', 'Jobs', 'Apple', now(), now());

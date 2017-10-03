@@ -26,7 +26,7 @@ http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/jso
     <flow name="put:/customers/{id}:application/json:api-config">
         <json:json-to-object-transformer returnClass="java.util.HashMap" doc:name="JSON to Object"/>
         <db:update config-ref="MySQL_Configuration" doc:name="Database">
-            <db:parameterized-query><![CDATA[update customer set firstname = #[payload.firstname], lastname = #[payload.lastname] where id = #[id]]]></db:parameterized-query>
+            <db:parameterized-query><![CDATA[update customer set firstname = #[payload.firstname], lastname = #[payload.lastname], updatedtime = now() where id = #[id]]]></db:parameterized-query>
         </db:update>
         <set-payload value="{&quot;status&quot;: &quot;customer update successfully&quot;}" doc:name="Set Payload"/>
     </flow>
@@ -43,15 +43,16 @@ http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/jso
         <json:object-to-json-transformer doc:name="Object to JSON"/>
     </flow>
     <flow name="get:/customers:api-config">
-        <db:select config-ref="MySQL_Configuration" doc:name="Database">
-            <db:parameterized-query><![CDATA[select * from customer]]></db:parameterized-query>
+        <db:select config-ref="MySQL_Configuration" doc:name="Database" fetchSize="2" streaming="true">
+            <db:parameterized-query><![CDATA[select * from customer 
+where updatedtime >= IFNULL(#[message.inboundProperties.'http.query.params'.startdate], updatedtime) and updatedtime <= IFNULL(#[message.inboundProperties.'http.query.params'.enddate], updatedtime)]]></db:parameterized-query>
         </db:select>
         <json:object-to-json-transformer doc:name="Object to JSON"/>
     </flow>
     <flow name="post:/customers:application/json:api-config">
         <json:json-to-object-transformer returnClass="java.util.HashMap" doc:name="JSON to Object"/>
         <db:insert config-ref="MySQL_Configuration" doc:name="Database">
-            <db:parameterized-query><![CDATA[INSERT INTO customer(firstname, lastname, address) VALUES(#[payload.firstname], #[payload.lastname], #[payload.?address]);]]></db:parameterized-query>
+            <db:parameterized-query><![CDATA[INSERT INTO customer(firstname, lastname, address, createdTime, updatedtime) VALUES(#[payload.firstname], #[payload.lastname], #[payload.?address], now(), now());]]></db:parameterized-query>
         </db:insert>
         <set-payload value="{&quot;status&quot;: &quot;customer create successfully&quot;}" doc:name="Set Payload"/>
     </flow>
