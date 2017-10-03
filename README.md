@@ -25,10 +25,34 @@ Install [postman](https://www.getpostman.com/) by choosing your specific platfor
 
 In post man, test api by typing below URL
 
+* To List **customers**, use `http://address:port/api/customers?startdate={startdate}&enddate={enddate}`, the `{startend}` and `{enddate}` used for filter
 ![list][list]
+
+* To Create a new **customer**, use `http://address:port/api/customers/`, the example payload just like below
+```
+{
+	"id":5,
+	"firstname":"Jiahao",
+	"lastname":"Wang",
+	"address":"181 grafton road, Grafton, Auckland"
+}
+```
 ![create][create]
+
+* To get a **customer**, use `http://address:port/api/customers/{id}`, the `{id}` is the customer's identity
 ![get][get]
+
+* To update a **customer**, use `http://address:port/api/customers/{id}`, the `{id}` is the customer's identity and the example payload just like below 
+```
+{
+        "lastname": "Larry",
+        "firstname": "Ellison",
+        "id": 2
+}
+```
 ![update][update]
+
+* To delete a **customer**, use `http://address:port/api/customers/{id}`, the `{id}` is the customer's identity
 ![delete][delete]
 
 [list]: README-resources/list.png
